@@ -1,8 +1,8 @@
-import fastify from "fastify";
+import Fastify from "fastify";
 import Bouncer from "../routes/bouncer.routes";
 
 function build(opts={}){
-    const app=fastify(opts)
+    const app=Fastify(opts)
     app.register(Bouncer);
     return app
 }

@@ -1,12 +1,11 @@
-
-import build from "./server/server";
+import Fastify from "fastify";
+import Bouncer from "./routes/bouncer.routes";
 import connection from "./utils/databaseConnection";
 
 connection();
 
-const app= build({
-    logger:true
-})
+const app= Fastify({logger:true});
+app.register(Bouncer);
 
 app.listen({ port: Number(process.env.PORT || 3000), host: '0.0.0.0'}, (err,address)=>{
     if(err){
