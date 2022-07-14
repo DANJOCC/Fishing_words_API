@@ -5,12 +5,7 @@ import connection from "./utils/databaseConnection";
 connection();
 
 const app= build({
-    logger:{
-        level: 'info',
-        transport:{
-            target:'pino-pretty'
-        }
-    }
+    logger:true
 })
 
 app.listen({ port: Number(process.env.PORT || 3000), host: '0.0.0.0'}, (err,address)=>{
