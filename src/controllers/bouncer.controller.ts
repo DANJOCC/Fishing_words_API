@@ -1,8 +1,12 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { user } from "../models/user.model";
 import { CustomRequest } from "../types/UserRequestBody.type";
-
+import nodemailer from 'nodemailer';
 class Bouncer {
+  
+
+  
+
   public async register(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
         const {username, email, password} = request.body
         const newUser= await user.findOne({username})
@@ -16,6 +20,29 @@ class Bouncer {
             password
           })
           await newUser.save()
+          const sms={
+              from:'fishingwordsprojectomovil@gmail.com',
+              to: email,
+              subject:'codigo de validacion',
+              text: 'prueba'
+          }
+          const sender= nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth:{
+              user:'fishingwordsprojectomovil@gmail.com',
+              pass:'tjelebbbkuxgekgt'
+            }
+          })
+          console.log(sender)
+          sender.sendMail(sms, (error, info)=>{
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email enviado: ' + info.response);
+            }
+          })
           reply.status(201).send('succesful sing up')
         }  
   }
