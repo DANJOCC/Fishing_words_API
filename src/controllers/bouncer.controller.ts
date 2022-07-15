@@ -8,42 +8,43 @@ class Bouncer {
   
 
   public async register(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
-        const {username, email, password} = request.body
+        const {username, tlf, password} = request.body
         const newUser= await user.findOne({username})
         if(newUser!==null){
-          reply.status(403).send('User already exist')
+          newUser.tlf===tlf ? reply.status(403).send({msg:'User already exist, change username'}):
+                              reply.status(403).send({msg:'User already exist, change phone number'}) 
         }
         else{
           const newUser= await new user({
             username,
-            email,
+            tlf,
             password
           })
-          await newUser.save()
-          const sms={
-              from:'fishingwordsprojectomovil@gmail.com',
-              to: email,
-              subject:'codigo de validacion',
-              text: 'prueba'
-          }
-          const sender= nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth:{
-              user:'fishingwordsprojectomovil@gmail.com',
-              pass:'tjelebbbkuxgekgt'
-            }
-          })
-          console.log(sender)
-          sender.sendMail(sms, (error, info)=>{
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email enviado: ' + info.response);
-            }
-          })
-          reply.status(201).send('succesful sing up')
+           await newUser.save()
+          // const sms={
+          //     from:'fishingwordsprojectomovil@gmail.com',
+          //     to: email,
+          //     subject:'codigo de validacion',
+          //     text: 'prueba'
+          // }
+          // const sender= nodemailer.createTransport({
+          //   host: 'smtp.gmail.com',
+          //   port: 465,
+          //   secure: true,
+          //   auth:{
+          //     user:'fishingwordsprojectomovil@gmail.com',
+          //     pass:'tjelebbbkuxgekgt'
+          //   }
+          // })
+          // console.log(sender)
+          // sender.sendMail(sms, (error, info)=>{
+          //   if (error) {
+          //     console.log(error);
+          //   } else {
+          //     console.log('Email enviado: ' + info.response);
+          //   }
+          // })
+          reply.status(201).send({msg:'succesful sing up'})
         }  
   }
   public async login(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
@@ -51,33 +52,31 @@ class Bouncer {
         console.log(username)
         const newUser= await user.findOne({username})
         if(newUser===null){
-          reply.status(404).send('User not found')
+          reply.status(404).send({msg:'User not found'})
         }
         else if(newUser!== null && newUser.password!==password){
-          reply.status(403).send('wrong password')
+          reply.status(403).send({msg:'wrong password'})
         }
         else{
-          reply.status(200).send({msg: 'Welcome '+username, id: newUser.id})
+          reply.status(200).send({msg: 'welcome', username})
         }  
   }
-  // public async profile(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
-  //   const {id}= request.body;
-  //   if(id===undefined){
-  //     reply.status(403).send('you need to be logged for this action')
-  //   }
-  //   else if(id!== undefined){
-  //       const isUser=Object(request.session.get('user'))
-  //         if(isUser!==undefined){
-  //           const id=isUser
-  //           const loggedUser=await user.findById(id.id)
-  //           loggedUser !== undefined ? reply.status(201).send({profile: loggedUser}): reply.status(403).send('user not found')
-  //         }
-  //         else{
-  //         reply.status(403).send('you need to be logged')
-  //         }
-  //       } 
-        
-  //   }
+  public async profile(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
+     const {username}= request.query;
+     if(username===undefined){
+       reply.status(404).send('username not found, please try again')
+     }
+     else{
+      const newUser= await user.findOne({username})
+      if(newUser!==null){
+        const {tlf, password}=newUser
+        reply.status(200).send({username, tlf, password})
+      }
+      else{
+        reply.status(404).send('username not found, please try again')
+      }
+     }
+     }
 }
 
 export const bouncer=new Bouncer()
