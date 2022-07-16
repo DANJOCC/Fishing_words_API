@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import Bouncer from "./routes/bouncer.routes";
 import connection from "./utils/databaseConnection";
 import fastifyJwt from "@fastify/jwt";
+import cors from "@fastify/cors";
 connection();
 
 const app= Fastify({ logger:{
@@ -11,6 +12,7 @@ const app= Fastify({ logger:{
     }
 }});
 app.register(Bouncer);
+app.register(cors);
 app.register(fastifyJwt, {
     secret: 'papi no me robeis :('
 })

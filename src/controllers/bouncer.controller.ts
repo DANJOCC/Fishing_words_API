@@ -11,8 +11,8 @@ class Bouncer {
         const {username, tlf, password} = request.body
         const newUser= await user.findOne({username})
         if(newUser!==null){
-          newUser.tlf===tlf ? reply.status(403).send({msg:'User already exist, change username'}):
-                              reply.status(403).send({msg:'User already exist, change phone number'}) 
+          newUser.tlf===tlf ? reply.status(403).send({msg:'User already exist, change phone number'}):
+                              reply.status(403).send({msg:'User already exist, change username'}) 
         }
         else{
           const newUser= await new user({
@@ -48,7 +48,7 @@ class Bouncer {
         }  
   }
   public async login(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
-        const {username,  password} = request.body
+        const {username, password} = request.body
         console.log(username)
         const newUser= await user.findOne({username})
         if(newUser===null){
@@ -64,7 +64,7 @@ class Bouncer {
   public async profile(request: CustomRequest, reply: FastifyReply, ):Promise<any> {
      const {username}= request.query;
      if(username===undefined){
-       reply.status(404).send('username not found, please try again')
+       reply.status(404).send({msg:'username not found, please try again'})
      }
      else{
       const newUser= await user.findOne({username})
@@ -73,7 +73,7 @@ class Bouncer {
         reply.status(200).send({username, tlf, password})
       }
       else{
-        reply.status(404).send('username not found, please try again')
+        reply.status(404).send({msg:'username not found, please try again'})
       }
      }
      }
