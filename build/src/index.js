@@ -9,12 +9,14 @@ const databaseConnection_1 = __importDefault(require("./utils/databaseConnection
 const jwt_1 = __importDefault(require("@fastify/jwt"));
 const cors_1 = __importDefault(require("@fastify/cors"));
 (0, databaseConnection_1.default)();
-const app = (0, fastify_1.default)({ logger: {
-        level: 'info',
-        transport: {
-            target: 'pino-pretty'
-        }
-    } });
+const app = (0, fastify_1.default)({ logger: true
+    /*{
+    level: 'info',
+    transport:{
+        target:'pino-pretty'
+    }
+    }*/
+});
 app.register(bouncer_routes_1.default);
 app.register(cors_1.default);
 app.register(jwt_1.default, {
