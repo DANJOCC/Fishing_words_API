@@ -37,6 +37,7 @@ const Bouncer: FastifyPluginCallback= async (fastify: FastifyInstance, opt:any, 
     fastify.post("/signUp", bouncer.register)
     fastify.post("/login", logInOptions,bouncer.login)
     fastify.get("/profile", AuthOptions,bouncer.profile)
+    fastify.get("/isRegisterTlf", AuthOptions, bouncer.VerifyTlf)
     done()
 }
 

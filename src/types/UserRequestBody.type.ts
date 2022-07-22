@@ -5,5 +5,6 @@ export  type CustomRequest= FastifyRequest<{ //Modificacion del tipo FastifyRequ
     Body: User,
     Querystring:{
         username:string
+        tlf:string
     }
 }>

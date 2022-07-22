@@ -77,6 +77,20 @@ class Bouncer {
       }
      }
      }
+     public async VerifyTlf(request: CustomRequest, reply:FastifyReply):Promise<any>{
+      const sendtlf=request.query.tlf
+      const tlf=`+${sendtlf}`
+      
+      const userTlf=await user.findOne({tlf})
+      
+      if(userTlf!==null){
+        
+        reply.status(200).send({IsRegister:true})
+      }
+      else{
+        reply.status(200).send({IsRegister:false})
+      }
+     }
 }
 
 export const bouncer=new Bouncer()
