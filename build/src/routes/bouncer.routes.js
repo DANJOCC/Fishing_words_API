@@ -45,6 +45,7 @@ const Bouncer = (fastify, opt, done) => __awaiter(void 0, void 0, void 0, functi
     fastify.post("/signUp", bouncer_controller_1.bouncer.register);
     fastify.post("/login", logInOptions, bouncer_controller_1.bouncer.login);
     fastify.get("/profile", AuthOptions, bouncer_controller_1.bouncer.profile);
+    fastify.get("/isRegisterTlf", AuthOptions, bouncer_controller_1.bouncer.VerifyTlf);
     done();
 });
 exports.default = Bouncer;
