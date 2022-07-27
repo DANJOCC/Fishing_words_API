@@ -8,13 +8,13 @@ import playZone from "./controllers/room.controller";
 import { isObjectBindingPattern } from "typescript";
 connection();
 
-const app= Fastify({ logger:true
-   /* {
+const app= Fastify({ logger://true
+    {
     level: 'info',
     transport:{
         target:'pino-pretty'
     }
-    }*/
+    }
 });
 app.register(Bouncer);
 app.register(cors);
@@ -30,7 +30,8 @@ app.ready(err=>{
 
         
 
-        socket.on('connected', ()=>{
+        socket.on('connected', (roomConfig:any)=>{
+            console.log(roomConfig)
             if(playZone.getRooms()===0){
                 playZone.addRoom('room -'+socket.id, socket.id)
                 app.log.info('nueva sala creada', socket.id)
@@ -64,7 +65,7 @@ app.ready(err=>{
     })
 })
 
-app.listen({ port: Number(process.env.PORT || 3000), host:/*'192.168.1.103'*/'0.0.0.0'}, (err,address)=>{
+app.listen({ port: Number(process.env.PORT || 3000), host:'192.168.1.103'/*'0.0.0.0'*/}, (err,address)=>{
     if(err){
         app.log.error(err);
         process.exit(1)
