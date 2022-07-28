@@ -33,7 +33,7 @@ app.ready(err=>{
         socket.on('connected', (roomConfig:any)=>{
             console.log(roomConfig)
             if(playZone.getRooms()===0){
-                playZone.addRoom('room -'+socket.id, socket.id)
+                playZone.addRoom('room -'+socket.id, socket.id, roomConfig)
                 app.log.info('nueva sala creada', socket.id)
             }
             else if(!playZone.addRoomieInRoom(socket.id)){

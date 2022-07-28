@@ -1,5 +1,5 @@
 
-import { Room } from "../interfaces/room.interface";
+import { Room, roomConfig } from "../interfaces/room.interface";
 import { Rommie } from "../interfaces/roomie.interface";
 
 
@@ -20,10 +20,10 @@ class Roomies {
         }
     }
 
-    public addRoom(room:string, playerID:string){
+    public addRoom(room:string, playerID:string, config:roomConfig){
             const players=[playerID]
             this.roomies.push({room, id: playerID})
-            return this.rooms.push({id: room,players, owner:playerID})
+            return this.rooms.push({id: room,players, owner:playerID, config})
     }
 
     public getRommies=()=>{
