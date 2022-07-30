@@ -5,16 +5,18 @@ import fastifyJwt from "@fastify/jwt";
 import socketioServer from "fastify-socket.io";
 import cors from "@fastify/cors";
 import playZone from "./controllers/room.controller";
-import { isObjectBindingPattern } from "typescript";
+import sixLetters from "./utils/sixLetters"
+import fiveLetters from "./utils/fiveLetters"
+import fourLetters from "./utils/fourLetters"
 connection();
 
-const app= Fastify({ logger://true
-    {
+const app= Fastify({ logger:true
+    /*{
     level: 'info',
     transport:{
         target:'pino-pretty'
     }
-    }
+    }*/
 });
 app.register(Bouncer);
 app.register(cors);
@@ -31,30 +33,59 @@ app.ready(err=>{
         
 
         socket.on('connected', (roomConfig:any)=>{
-            console.log(roomConfig)
-            if(playZone.getRooms()===0){
-                playZone.addRoom('room -'+socket.id, socket.id, roomConfig)
-                app.log.info('nueva sala creada', socket.id)
+            const config=roomConfig.config
+            let arrayLetters:Array<String>=[]
+            if(config.length==6){
+                arrayLetters=sixLetters
             }
-            else if(!playZone.addRoomieInRoom(socket.id)){
+            else if(config.length==5){
+                arrayLetters=fiveLetters
+            }
+            else{
+                arrayLetters=fourLetters
+            }
+
+            if(roomConfig.owner){
+                const roomId='room-'+Math.floor(Math.random()*1000)
+                
+                const words=[]
+                for (let index = 0; index < config.rounds; index++) {
+                    const rand=Math.floor(Math.random()*arrayLetters.length)
+                    const element = arrayLetters[rand];
+                    console.log(element)
+                    words.push(element)
+                }
+                socket.join(roomId)
+                playZone.addRoom(roomId, socket.id, config, words)
+                socket.emit('setWords', {words, roomId})
+                app.log.info(`nueva sala creada ${roomId}`)
+            }
+            else if(!playZone.addRoomieInRoom(roomConfig.id,socket.id)){
                 app.log.info('esta pelando bola ', socket.id)
                 socket.emit('waitForRoom')
             }
-            else
-            {
+            else{
+                socket.join(roomConfig.id)
                 const room=playZone.getRoom(socket.id)
-                if(room!==null && room.players.length===4){
-                    playZone.DeleteAwaitRoomie(room.owner)
-                    app.io.in(room.id).emit('newUser', socket.id)
-                }
-                else if(room!==null && room.players.length<4){
-                    app.io.in(room.id).emit('newUser', socket.id)
-                    app.log.info(`el pelabola ${socket.id} entro en la sala ${room.id}`)
-                }
+                const config=room?.config
+                const words=room?.words
+                const roomId=room?.id
+                socket.emit('state', {config,words,roomId})
+                app.io.in(roomConfig.id).emit('newUser',socket.id)
+                app.log.info(`${socket.id} se unio a ${roomConfig.id}`)
             }
+            
         })
 
         socket.on('exit',()=>{
+            app.log.info(`el mamahuevo ${socket.id} se desconecto, cojanselo mas duro`)
+            const room=playZone.getRoom(socket.id)
+            if(room!==null){
+                app.io.in(room.id).disconnectSockets(true);
+                playZone.deleteRoom(socket.id)
+            }
+        })
+        socket.on('disconnect',()=>{
             app.log.info(`el mamahuevo ${socket.id} se desconecto, cojanselo mas duro`)
             const room=playZone.getRoom(socket.id)
             if(room!==null){

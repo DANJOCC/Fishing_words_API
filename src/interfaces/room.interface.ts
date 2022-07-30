@@ -8,7 +8,8 @@ export interface roomConfig{
 }
 
 export interface Room{
-    config: roomConfig
+    config: roomConfig,
+    words:Array<String>,
     id: string,
     players: Array<string>,
     owner:string

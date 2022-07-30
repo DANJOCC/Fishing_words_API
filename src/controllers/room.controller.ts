@@ -9,10 +9,10 @@ class Roomies {
     roomies:Array<Rommie>=[] //Usuarios en espera
 
 
-    public addRoomieInRoom = (id:string)=>{
-        const room = this.rooms.find(room => room.players.length<4);
+    public addRoomieInRoom = (id:string,player:string)=>{
+        const room = this.rooms.find(room => room.id===id && room.players.length<3);
         if(room!==undefined){
-            room.players.push(id)
+            room.players.push(player)
             return true
         }
         else{
@@ -20,10 +20,10 @@ class Roomies {
         }
     }
 
-    public addRoom(room:string, playerID:string, config:roomConfig){
+    public addRoom(room:string, playerID:string, config:roomConfig, words:Array<String>){
             const players=[playerID]
             this.roomies.push({room, id: playerID})
-            return this.rooms.push({id: room,players, owner:playerID, config})
+            return this.rooms.push({id: room,players, owner:playerID, config, words})
     }
 
     public getRommies=()=>{
