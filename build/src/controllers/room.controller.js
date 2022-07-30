@@ -4,10 +4,10 @@ class Roomies {
     constructor() {
         this.rooms = []; //Salas de juego (rooms) abiertas
         this.roomies = []; //Usuarios en espera
-        this.addRoomieInRoom = (id) => {
-            const room = this.rooms.find(room => room.players.length < 4);
+        this.addRoomieInRoom = (id, player) => {
+            const room = this.rooms.find(room => room.id === id && room.players.length < 3);
             if (room !== undefined) {
-                room.players.push(id);
+                room.players.push(player);
                 return true;
             }
             else {
@@ -49,10 +49,10 @@ class Roomies {
             }
         };
     }
-    addRoom(room, playerID) {
+    addRoom(room, playerID, config, words) {
         const players = [playerID];
         this.roomies.push({ room, id: playerID });
-        return this.rooms.push({ id: room, players, owner: playerID });
+        return this.rooms.push({ id: room, players, owner: playerID, config, words });
     }
 }
 const playZone = new Roomies();
