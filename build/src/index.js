@@ -92,7 +92,7 @@ app.ready(err => {
         });
     });
 });
-app.listen({ port: Number(process.env.PORT || 3000), host: '192.168.1.103' /*'0.0.0.0'*/ }, (err, address) => {
+app.listen({ port: Number(process.env.PORT || 3000), host: /*'192.168.1.103'*/ '0.0.0.0' }, (err, address) => {
     if (err) {
         app.log.error(err);
         process.exit(1);
