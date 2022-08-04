@@ -8,6 +8,7 @@ import playZone from "./controllers/room.controller";
 import sixLetters from "./utils/sixLetters"
 import fiveLetters from "./utils/fiveLetters"
 import fourLetters from "./utils/fourLetters"
+import { rankingBoard } from "./controllers/ranking.controller";
 connection();
 
 const app= Fastify({ logger:true
@@ -85,6 +86,26 @@ app.ready(err=>{
                 playZone.deleteRoom(socket.id)
             }
         })
+
+
+        socket.on('updateRanking',(update:any)=>{
+            const {username,newVictorie, mode}=update
+            rankingBoard.updateRanking(username,newVictorie,mode)
+            
+        })
+        socket.on('endGame',(results:any)=>{
+           const{winner}=results
+           const room=playZone.getRoom(socket.id)
+           if(room!==null && winner!==null){
+            app.io.in(room.id).emit('endGame', winner);
+            }
+            if(room!==null){
+                app.io.in(room.id).emit('endGame', null);
+            }
+            
+        })
+
+
         socket.on('disconnect',()=>{
             app.log.info(`el mamahuevo ${socket.id} se desconecto, cojanselo mas duro`)
             const room=playZone.getRoom(socket.id)

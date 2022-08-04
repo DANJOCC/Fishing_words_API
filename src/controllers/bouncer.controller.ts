@@ -21,29 +21,7 @@ class Bouncer {
             password
           })
            await newUser.save()
-          // const sms={
-          //     from:'fishingwordsprojectomovil@gmail.com',
-          //     to: email,
-          //     subject:'codigo de validacion',
-          //     text: 'prueba'
-          // }
-          // const sender= nodemailer.createTransport({
-          //   host: 'smtp.gmail.com',
-          //   port: 465,
-          //   secure: true,
-          //   auth:{
-          //     user:'fishingwordsprojectomovil@gmail.com',
-          //     pass:'tjelebbbkuxgekgt'
-          //   }
-          // })
-          // console.log(sender)
-          // sender.sendMail(sms, (error, info)=>{
-          //   if (error) {
-          //     console.log(error);
-          //   } else {
-          //     console.log('Email enviado: ' + info.response);
-          //   }
-          // })
+         
           reply.status(201).send({msg:'succesful sing up'})
         }  
   }
