@@ -72,7 +72,7 @@ app.ready(err=>{
                 const words=room?.words
                 const roomId=room?.id
                 socket.emit('state', {config,words,roomId})
-                app.io.in(roomConfig.id).emit('newUser',socket.id)
+                app.io.in(roomConfig.id).emit('newUser',room?.players)
                 app.log.info(`${socket.id} se unio a ${roomConfig.id}`)
             }
             
@@ -89,20 +89,15 @@ app.ready(err=>{
 
 
         socket.on('updateRanking',(update:any)=>{
-            const {username,newVictorie, mode}=update
-            rankingBoard.updateRanking(username,newVictorie,mode)
+            const {username,newVictorie, letters, rounds}=update
+            rankingBoard.updateRanking(username,newVictorie,letters,rounds)
             
         })
-        socket.on('endGame',(results:any)=>{
-           const{winner}=results
+        socket.on('endGame',()=>{
            const room=playZone.getRoom(socket.id)
-           if(room!==null && winner!==null){
-            app.io.in(room.id).emit('endGame', winner);
+           if(room!==null){
+            app.io.in(room.id).emit('endGame');
             }
-            if(room!==null){
-                app.io.in(room.id).emit('endGame', null);
-            }
-            
         })
 
 

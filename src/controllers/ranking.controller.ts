@@ -21,23 +21,23 @@ class RankingBoard{
         }
     }
 
-    public async updateRanking(username: string, newVictorie: boolean, mode:string){
+    public async updateRanking(username: string, newVictorie: number, letters:number, rounds:number){
         const ranker= await userRanking.findOne({username})
         
         if(ranker===null){
             return false
         }
-        if(newVictorie && mode!==undefined){
-            if(mode==='fourLetters'){
-                ranker.victories['fourLetters']++}
-            if(mode==='fiveLetters'){
-                ranker.victories['fiveLetters']++}
-            if(mode==='sixLetters'){
-                ranker.victories['fiveLetters']++}
-            ranker.gamesWon++
+        if(letters!==undefined){
+            if(letters===4){
+                ranker.victories['fourLetters']+=newVictorie}
+            if(letters ===5 ){
+                ranker.victories['fiveLetters']+=newVictorie}
+            if(letters===6){
+                ranker.victories['fiveLetters']+=newVictorie}
+            ranker.gamesWon+=newVictorie
             
         }
-        ranker.gamesPlayed++
+        ranker.gamesPlayed+=rounds
         ranker.save()
         return true
 
